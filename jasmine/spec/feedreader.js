@@ -16,6 +16,7 @@ $(function() {
          * 比如你把 app.js 里面的 allFeeds 变量变成一个空的数组然后刷新
          * 页面看看会发生什么。
         */
+
         it('are defined', function() {
             expect(allFeeds).toBeDefined();
             expect(allFeeds.length).not.toBe(0);
@@ -25,11 +26,24 @@ $(function() {
         /* TODO:
          * 编写一个测试遍历 allFeeds 对象里面的所有的源来保证有链接字段而且链接不是空的。
          */
-
+        it('url not undefined or null', function () {
+            expect(allFeeds.map(function (feed) {
+                if(feed.url === undefined || feed.url.length === 0){
+                    return false;
+                }
+            })).not.toContain(false);
+        });
 
         /* TODO:
          * 编写一个测试遍历 allFeeds 对象里面的所有的源来保证有名字字段而且不是空的。
          */
+        it('name not undefined or null', function () {
+            expect(allFeeds.map(function (feed) {
+                if(feed.name === undefined || feed.name.length === 0){
+                    return false;
+                }
+            })).not.toContain(false);
+        });
     });
 
 
