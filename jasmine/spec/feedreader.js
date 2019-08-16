@@ -53,11 +53,11 @@ $(function() {
          * 写一个测试用例保证菜单元素默认是隐藏的。你需要分析 html 和 css
          * 来搞清楚我们是怎么实现隐藏/展示菜单元素的。
          */
-        let elem = document.body.querySelector('.slide-menu');
-        let style = elem.getBoundingClientRect();   //获取元素位置信息
 
         it('are hidden menu', function () {
-            expect(style.left + style.width <= 0).toBe(true);
+            let slideMenu = document.body.querySelector('.slide-menu');
+            let slideMenuStyle = slideMenu.getBoundingClientRect();   //获取元素位置信息
+            expect(slideMenuStyle.left + slideMenuStyle.width <= 0).toBe(true);
         })
 
         /* TODO:
@@ -65,7 +65,24 @@ $(function() {
          * 测试应该包含两个 expectation ： 党点击图标的时候菜单是否显示，
          * 再次点击的时候是否隐藏。
          */
+        it('hidden from click menu', function () {
+            // *************** 这里是重现代码 **************
+            let slideMenu = document.body.querySelector('.slide-menu');
+            let elem = document.body.querySelector('.icon-list');
+            let slideMenuStyle = slideMenu.getBoundingClientRect();   //获取元素位置信息
+            console.log(slideMenuStyle); // 点击菜单按钮前，打印获取的属性
+            elem.click();    //点击菜单按钮
+            console.log(slideMenuStyle);  //再次打印获取属性
 
+            // 我考虑了一个原因，可能是我之前获取的DOM信息已经锁定了，所以这里我重新获取然后打印
+            console.log(document.body.querySelector('.slide-menu').getBoundingClientRect());
+
+            // let elem = document.body.querySelector('.icon-list');
+            // elem.click();
+            // expect(document.body.className).toBe('');
+            // elem.click();
+            // expect(document.body.className).toBe('menu-hidden');
+        })
     })
 
 
