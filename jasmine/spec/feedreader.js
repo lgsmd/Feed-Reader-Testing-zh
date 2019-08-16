@@ -66,28 +66,28 @@ $(function() {
          * 再次点击的时候是否隐藏。
          */
         it('hidden from click menu', function () {
-            // *************** 这里是重现代码 **************
-            let slideMenu = document.body.querySelector('.slide-menu');
-            let elem = document.body.querySelector('.icon-list');
-            let slideMenuStyle = slideMenu.getBoundingClientRect();   //获取元素位置信息
-            console.log(slideMenuStyle); // 点击菜单按钮前，打印获取的属性
-            elem.click();    //点击菜单按钮
-            console.log(slideMenuStyle);  //再次打印获取属性
-
-            // 我考虑了一个原因，可能是我之前获取的DOM信息已经锁定了，所以这里我重新获取然后打印
-            console.log(document.body.querySelector('.slide-menu').getBoundingClientRect());
-
+            // // *************** 这里是重现代码 ************** (探究获取CSS属性时遇到的问题)
+            // let slideMenu = document.body.querySelector('.slide-menu');
             // let elem = document.body.querySelector('.icon-list');
-            // elem.click();
-            // expect(document.body.className).toBe('');
-            // elem.click();
-            // expect(document.body.className).toBe('menu-hidden');
+            // let slideMenuStyle = slideMenu.getBoundingClientRect();   //获取元素位置信息
+            // console.log(slideMenuStyle); // 点击菜单按钮前，打印获取的属性
+            // elem.click();    //点击菜单按钮
+            // console.log(slideMenuStyle);  //再次打印获取属性
+            //
+            // // 我考虑了一个原因，可能是我之前获取的DOM信息已经锁定了，所以这里我重新获取然后打印
+            // console.log(document.body.querySelector('.slide-menu').getBoundingClientRect());
+
+            let elem = document.body.querySelector('.icon-list');
+            elem.click();
+            expect(document.body.className).toBe('');
+            elem.click();
+            expect(document.body.className).toBe('menu-hidden');
         })
     })
 
 
     /* TODO: 13. 写一个叫做 "Initial Entries" 的测试用例 */
-
+    describe('Initial Entries', function () {
         /* TODO:
          * 写一个测试保证 loadFeed 函数被调用而且工作正常，即在 .feed 容器元素
          * 里面至少有一个 .entry 的元素。
@@ -95,11 +95,39 @@ $(function() {
          * 记住 loadFeed() 函数是异步的所以这个而是应该使用 Jasmine 的 beforeEach
          * 和异步的 done() 函数。
          */
+        beforeEach(function (done) {
+            loadFeed(0, function () {
+                done();
+            })
+        })
+
+        it('Initial Entries', function (done) {
+            expect(document.body.querySelector('.feed').getElementsByClassName('entry').length).toBeGreaterThan(0);
+            done();
+        });
+    })
 
     /* TODO: 写一个叫做 "New Feed Selection" 的测试用例 */
+    describe('New Feed Selection', function () {
+        let content;
 
-        /* TODO:
-         * 写一个测试保证当用 loadFeed 函数加载一个新源的时候内容会真的改变。
-         * 记住，loadFeed() 函数是异步的。
-         */
+        beforeEach(function (done) {
+            content = $('.feed').html();
+            console.log(content);
+            for(let i = allFeeds.length - 1; i >= 0; i--) {
+                loadFeed(3, done);
+            }
+        });
+
+    /* TODO:
+    * 写一个测试保证当用 loadFeed 函数加载一个新源的时候内容会真的改变。
+    * 记住，loadFeed() 函数是异步的。
+    */
+        it('change loadFeed for reload', function (done) {
+
+            expect(content).not.toBe($('.feed').html());
+            console.log($('.feed').html());
+            done();
+        })
+    })
 }());
