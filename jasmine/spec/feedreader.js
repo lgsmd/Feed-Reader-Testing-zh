@@ -66,22 +66,11 @@ $(function() {
          * 再次点击的时候是否隐藏。
          */
         it('hidden from click menu', function () {
-            // // *************** 这里是重现代码 ************** (探究获取CSS属性时遇到的问题)
-            // let slideMenu = document.body.querySelector('.slide-menu');
-            // let elem = document.body.querySelector('.icon-list');
-            // let slideMenuStyle = slideMenu.getBoundingClientRect();   //获取元素位置信息
-            // console.log(slideMenuStyle); // 点击菜单按钮前，打印获取的属性
-            // elem.click();    //点击菜单按钮
-            // console.log(slideMenuStyle);  //再次打印获取属性
-            //
-            // // 我考虑了一个原因，可能是我之前获取的DOM信息已经锁定了，所以这里我重新获取然后打印
-            // console.log(document.body.querySelector('.slide-menu').getBoundingClientRect());
-
-            let elem = document.body.querySelector('.icon-list');
+            let elem = document.body.querySelector('.menu-icon-link');
             elem.click();
-            expect(document.body.className).toBe('');
+            expect($('body').hasClass('menu-hidden')).toBe(false);
             elem.click();
-            expect(document.body.className).toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBe(true);
         })
     })
 
@@ -96,14 +85,11 @@ $(function() {
          * 和异步的 done() 函数。
          */
         beforeEach(function (done) {
-            loadFeed(0, function () {
-                done();
-            })
+            loadFeed(0, done)
         })
 
-        it('Initial Entries', function (done) {
+        it('Initial Entries', function () {
             expect(document.body.querySelector('.feed').getElementsByClassName('entry').length).toBeGreaterThan(0);
-            done();
         });
     })
 
@@ -113,7 +99,6 @@ $(function() {
 
         beforeEach(function (done) {
             content = $('.feed').html();
-            console.log(content);
             for(let i = allFeeds.length - 1; i >= 0; i--) {
                 loadFeed(3, done);
             }
@@ -123,11 +108,8 @@ $(function() {
     * 写一个测试保证当用 loadFeed 函数加载一个新源的时候内容会真的改变。
     * 记住，loadFeed() 函数是异步的。
     */
-        it('change loadFeed for reload', function (done) {
-
+        it('change loadFeed for reload', function () {
             expect(content).not.toBe($('.feed').html());
-            console.log($('.feed').html());
-            done();
         })
     })
 }());
